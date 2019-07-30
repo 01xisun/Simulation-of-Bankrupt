@@ -1,0 +1,207 @@
+\documentclass[11pt]{article}
+
+\usepackage{amsmath}
+\usepackage[margin=1in, paperwidth=8.5in, paperheight=11in]{geometry}
+
+\begin{document}
+
+\begin{titlepage}
+    \begin{center}
+        \vspace*{3in}
+ 
+        \huge
+        Math 523 Project 1
+ 
+        \vspace{.15in}
+        \Large
+        Xi Sun
+ 
+        \vspace{0.5in}
+        June 19, 2019
+ 
+        \vfill
+
+    \end{center}
+\end{titlepage}
+
+\section{Introduction}
+In this project, we are interested in the topic about insurance risk and bankrupt. In an insurance company, we have 1,000 customers and \$1,000,000 in assets, with probability of a customer filling the claim is 0.1 which is independent of other customers and previous claims. Denote $X$ be the size of the claim, then $X$ follows a Pareto distribution. Also, we know that the true asset is the previous asset plus the annual premium and minus the claims. Denote this process as $Z(t)$, if $Z(t)$ falls below 0, then $Z(t)$ will stay 0 forever, which we call that as bankrupt.
+
+\section{Statistical and Computational Analysis}
+Before we actually dig into this "bankrupt" problem, we are interested in investigating the Pareto distribution first. Based on the theory, we have the Pareto distribution as following:
+\[
+f(x)=
+\begin{cases}
+\frac{ab^a}{(x+b)^{a+1}} & x \geq 0\\
+0 & x < 0
+\end{cases}
+\]
+with $a=5$ and $b=200,000$. And its cumulative distribution function(CDF), mean, variance, skewness, and excess kurtosis will be calculated and analyzed.
+
+\subsection{Pareto Distribution}
+First, according to the PDF, we want to analytically compute the CDF, expectation, variance, skewness, and excess kurtosis. With $a=5$, we have the following:
+\begin{eqnarray*}
+\mathrm{F(x)}&=&\int_{-\infty}^\infty \mathrm{f(x)} dx\\
+&=&\int_{0}^\infty \frac{5b^5}{(x+b)^6} dx\\
+&=&-\frac{b^5}{(x+b)^5}+c
+\end{eqnarray*}
+Since we need $\mathrm{F(\infty)}=1$, so $c=1$, and with $b=200,000$, therefore, we have CDF being $$\mathrm{F(x)}=1-\left(\frac{200000}{x+200000}\right)^5.$$
+
+\noindent For expectation, we have the following:
+\begin{eqnarray*}
+\mathrm{E[X]}&=&\int_{-\infty}^\infty x\mathrm{f(x)} dx\\
+&=&\int_{0}^\infty x\frac{5b^5}{(x+b)^6} dx\\
+&=&\left.-\frac{xb^5}{(x+b)^5}-\frac{b^5}{4(x+b)^4}\right|_0^\infty\\
+&=&0-(-\frac{b^5}{4b^4})\\
+&=&\frac{b}{4}\\
+&=&50,000
+\end{eqnarray*}
+
+\noindent For variance, we will calculate the $\mathrm{E(x^2)}$ first:
+\begin{eqnarray*}
+\mathrm{E[X^2]}&=&\int_{-\infty}^\infty x^2\mathrm{f(x)} dx\\
+&=&\int_{0}^\infty x^2\frac{5b^5}{(x+b)^6} dx\\
+&=&\left.-\frac{x^2b^5}{(x+b)^5}-\frac{2xb^5}{4(x+b)^4}-\frac{2b^5}{12(x+b)^3}\right|_0^\infty\\
+&=&0-(-\frac{2b^5}{12b^3})\\
+&=&\frac{b^2}{6}\\
+\end{eqnarray*}
+
+\noindent Therefore,
+\begin{eqnarray*}
+\mathrm{Var(X)}&=&\mathrm{E[X^2]}-\mathrm{E[X]^2}\\
+&=&\frac{b^2}{6}-\frac{b^2}{16}\\
+&=&\frac{5b^2}{48}\\
+&\approx&4,166,666,666.67
+\end{eqnarray*}
+
+\noindent For skewness, we have the following:
+\begin{eqnarray*}
+\mathrm{skew[X]}&=&\int_{-\infty}^\infty (\frac{x-\mu}{\sigma})^3\mathrm{f(x)} dx\\
+&=&\left(\frac{48}{5b^2}\right)^{\frac{3}{2}}\int_{0}^\infty (x-\frac{b}{4})^3\frac{5b^5}{(x+b)^6} dx\\
+&=&\left(\frac{48}{5b^2}\right)^{\frac{3}{2}}(\left.-(x-\frac{b}{4})^3b^5(x+b^{-5})-3(x-\frac{b}{4})^2\frac{b^5}{4}(x+b)^{-4}-6(x-\frac{b}{4})\frac{b^5}{12}(x+b)^{-3}-\frac{6b^5}{24}(x+b)^{-2}\right|_0^\infty)\\
+&=&\left(\frac{48}{5b^2}\right)^{\frac{3}{2}}\left(0-(-\frac{10b^3}{64})\right)\\
+&=&\left(\frac{48}{5b^2}\right)^{\frac{3}{2}}\left(\frac{5b^3}{32}\right)\\
+&=&6\sqrt{\frac{3}{5}}\\
+&\approx&4.64758
+\end{eqnarray*}
+
+\noindent Finally, for excess kurtosis, we need to calculate kurtosis first:
+\begin{eqnarray*}
+\mathrm{kur[X]}&=&\int_{-\infty}^\infty (\frac{x-\mu}{\sigma})^4\mathrm{f(x)} dx\\
+&=&\left(\frac{48}{5b^2}\right)^2\int_{0}^\infty (x-\frac{b}{4})^4\frac{5b^5}{(x+b)^6} dx\\
+&=&\left(\frac{48}{5b^2}\right)^2(-(x-\frac{b}{4})^4b^5(x+b)^{-5}-(x-\frac{b}{4})^3b^5(x+b)^{-4}-(x-\frac{b}{4})^2b^5(x+b)^{-3}-(x-\frac{b}{4})b^5(x+b)^{-2}\\
+&-&b^5(x+b)^{-1}|_0^\infty)\\
+&=&\left(\frac{48}{5b^2}\right)^2\left(0-(-\frac{205b^4}{256})\right)\\
+&=&\left(\frac{48}{5b^2}\right)^2\left(\frac{205b^4}{256}\right)\\
+&=&\frac{396}{5}\\
+&=&73.8
+\end{eqnarray*}
+\noindent So the excess kurtosis is $73.8-3=70.8$.\\
+
+\noindent Every theoretical result should match the actual result in real world application, or simulation in this case. Unless they are not consistent, so several simulation in R is down to try to prove the result.\\
+
+\noindent First, some packages in R are loaded for this project:\\
+
+<<warning=FALSE,message=FALSE>>=
+library(actuar)
+library(moments)
+@
+
+\noindent Now, a simulation of a Pareto distribution with 10,000 sample points are run, with a general Pareto distribution is fitted:\\
+
+<<out.width='4in'>>=
+x <- rpareto(10000,shape=5,scale=200000)
+hist(x,breaks=500,freq=FALSE,xlim=c(0,400000))
+curve(dpareto(x,shape=5,scale=200000),col="red",add=TRUE)
+@
+
+\noindent As we can see from the plot, the sample points shown by a histogram and a fitted curve of Pareto distribution actually corresponds to each other very well. Now the theoretical quantities of mean, variance, skewness, and excess kurtosis are needed to be verified. However, based on some self-work being done, 20 results are generated as follow:\\
+
+<<>>=
+m <- c()
+v <- c()
+s <- c()
+ek <- c()
+for (i in 1:20){
+  x <- rpareto(10000,shape=5,scale=200000)
+  m[i] <- mean(x)
+  v[i] <- var(x)
+  s[i] <- skewness(x)
+  ek[i] <- kurtosis(x)-3
+}
+m #mean
+v #variance
+s #skewness
+ek #excess kurtosis
+@
+
+\noindent As we can see from the data, only the mean and variance is staying around the theoretical mean and variance, and Therefore, for the Pareto distribution in this case, with $a=5$ and $b=200,000$, we can say that only the mean and variance is consistent comparing with the theoretical mean and other quantities are not consistent. And that is everything about the analysis of Pareto distribution. The actual simulation of company's assets will be discussed in the next part.\\
+
+\subsection{Simulation of Bankrupt}
+
+According to the theoretical formula, if $Z(t)$ is the company assets at the end of year $t$ with $Z(0)=1,000,000$ and
+\[
+Z(t)=
+\begin{cases}
+\mathrm{max}[Z(t-1)+\mathrm{premiums}-\mathrm{claims},0] & Z(t-1) > 0\\
+0 & Z(t-1) = 0
+\end{cases}
+\]
+
+\noindent In order to understand how this formula works and how it is looked like, five different sample path is plotted to give a preview of the company's assets:\\
+
+<<out.width='4in'>>=
+z <- c()
+z[1] <- 1000000
+col_vec <- c("red","green","blue","yellow")
+for (i in  1:5){
+  if (z[i]==0){
+    z[i+1] <- 0
+  }else{
+    z[i+1] <- max(z[i]+5000000-sum(rpareto(rbinom(1,1000,0.1),5,200000)),0)
+  }
+}
+plot(0:5,z,ylim=c(0,5000000),xlab="t",ylab="assets",type="l")
+for (j in 1:4){
+  for (i in 1:5){
+    if (z[i]==0){
+      z[i+1] <- 0
+    }else{
+      z[i+1] <- max(z[i]+5000000-sum(rpareto(rbinom(1,1000,0.1),5,200000)),0)
+    }
+  }
+  lines(0:5,z,col=col_vec[j])
+}
+legend("topleft",legend=c("path1","path2","path3","path4","path5"),
+       col=c("black",col_vec),lwd=1)
+@
+
+\noindent As we can see from the plot, since the value on each path is completely at random without setting any random seed, so there is no value to investigate the actual value for any of the paths. However, we can still look at the trend of the path, all five paths are shown decreasing, at least from this plot, we can conclude that the company's assets are tending to be bankrupted.\\
+
+\noindent In order to estimate analyze company's assets, we need to find the probability of the company goes to bankrupt, as well as the mean value of the company assets after 5 years, so the last part of the simulation is applied:\\
+
+<<>>=
+z <- c()
+z[1] <- 1000000
+z5 <- c()
+for (j in 1:10000){
+  for (i in 1:5){
+    if (z[i]==0){
+      z[i+1] <- 0
+    }else{
+      z[i+1] <- max(z[i]+5000000-sum(rpareto(rbinom(1,1000,0.1),5,200000)),0)
+    }
+  }
+  z5[j] <- z[6]
+}
+sum(z5==0)/length(z5)
+mean(z5)
+@
+
+\noindent As we can see from the result, the probability for a company goes to bankrupt in 5 years is around $41\%$. And the mean value is approximately 1.2 million for the amount of assets that an insurance company can earn. 
+
+\section{Conclusion}
+
+\noindent From this project, first of all, we can conclude that the Pareto distribution is really unstable, ie, large difference in skewness and kurtosis, which increases the risk probability. Therefore, based on this risk, insurance companies can really earn some amount of money since the starting asset is 1 million and the mean is approximately 1.2 million after 5 years. On the other hand, insurance companies really have a high insurance risk. Although some company can earn more than the beginning, there is still a $41\%$ chance that a company can go to bankrupt in 5 years.
+
+\end{document}
