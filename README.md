@@ -1,2 +1,2 @@
 # Simulation-of-Bankrupt
-Statistical analysis of bank rupt with pareto distribution.
+Statistical analysis of bankrupt with pareto distribution.
